@@ -196,9 +196,9 @@ productForm.addEventListener("submit", async function (e) {
 
         } else {
 
-            await addDoc(productsRef, product);
+            const ref = await addDoc(productsRef, product);
 
-            alert("تم إضافة المنتج بنجاح");
+            alert("تمت الإضافة بنجاح\nID = " + ref.id);
 
         }
 
@@ -209,12 +209,14 @@ productForm.addEventListener("submit", async function (e) {
     } catch (error) {
 
         alert(
-        "Code: " + error.code +
-        "\n\nMessage: " + error.message
-    );
+            "ERROR CODE:\n" + error.code +
+            "\n\nMESSAGE:\n" + error.message +
+            "\n\nFULL:\n" + JSON.stringify(error)
+        );
 
-}
+    }
 
+});
 // ======================================
 // حذف المنتج
 // ======================================
