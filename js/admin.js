@@ -75,24 +75,54 @@ if (logoutBtn) {
 
 
 // ======================================
+// مسار الصورة
+// الصورة بقت متخزنة كملف عادي جوه GitHub
+// (مجلد images/products/) بدل Firebase Storage،
+// فمفيش داعي لأي ترقية أو صلاحيات إضافية.
+// ======================================
+
+function resolveImagePath(value) {
+
+    const v = (value || "").trim();
+
+    if (!v) return "";
+
+    if (/^https?:\/\//i.test(v) || v.startsWith("images/")) {
+        return v;
+    }
+
+    return "images/products/" + v;
+
+}
+
+function toDisplayValue(path) {
+
+    if (!path) return "";
+
+    if (path.startsWith("images/products/")) {
+        return path.slice("images/products/".length);
+    }
+
+    return path;
+
+}
+
+
+// ======================================
 // معاينة الصورة
 // ======================================
 
-imageInput.addEventListener("change", function () {
+imageInput.addEventListener("input", function () {
 
-    const file = this.files[0];
+    const path = resolveImagePath(this.value);
 
-    if (!file) return;
+    previewImage.src = path || "images/no-image.png";
 
-    const reader = new FileReader();
+});
 
-    reader.onload = function (e) {
+previewImage.addEventListener("error", function () {
 
-        previewImage.src = e.target.result;
-
-    };
-
-    reader.readAsDataURL(file);
+    this.src = "images/no-image.png";
 
 });
 
@@ -143,83 +173,6 @@ function buildProduct(imageUrl = "") {
     };
 
 }
-// ======================================
-// ضغط الصورة وتحويلها إلى Base64
-// (بديل مجاني بالكامل عن Firebase Storage
-// الذي يتطلب ترقية الحساب Blaze)
-// الصورة تُحفظ مباشرة داخل مستند المنتج
-// في Firestore، فلا حاجة لأي خدمة تخزين خارجية.
-// ======================================
-
-function compressImage(file, maxWidth = 900, quality = 0.72) {
-
-    return new Promise((resolve, reject) => {
-
-        const reader = new FileReader();
-
-        reader.onload = (e) => {
-
-            const img = new Image();
-
-            img.onload = () => {
-
-                let width = img.width;
-                let height = img.height;
-
-                if (width > maxWidth) {
-                    height = Math.round((height * maxWidth) / width);
-                    width = maxWidth;
-                }
-
-                const canvas = document.createElement("canvas");
-                canvas.width = width;
-                canvas.height = height;
-
-                const ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0, width, height);
-
-                resolve(canvas.toDataURL("image/jpeg", quality));
-
-            };
-
-            img.onerror = () => reject(new Error("تعذرت قراءة الصورة"));
-
-            img.src = e.target.result;
-
-        };
-
-        reader.onerror = () => reject(new Error("تعذرت قراءة الملف"));
-
-        reader.readAsDataURL(file);
-
-    });
-
-}
-
-async function uploadImage(file) {
-
-    if (!file) return "";
-
-    // نحاول الضغط بجودة جيدة، ولو الحجم لسه كبير
-    // (فوق حد أمان Firestore وهو 1 ميجابايت للمستند)
-    // نقلل الجودة تدريجيًا لضمان الحفظ بنجاح.
-    let quality = 0.72;
-    let maxWidth = 900;
-    let dataUrl = await compressImage(file, maxWidth, quality);
-
-    while (dataUrl.length > 700000 && quality > 0.3) {
-        quality -= 0.12;
-        dataUrl = await compressImage(file, maxWidth, quality);
-    }
-
-    if (dataUrl.length > 900000) {
-        throw new Error("حجم الصورة كبير جدًا حتى بعد الضغط، جرب صورة أصغر.");
-    }
-
-    return dataUrl;
-
-}
-
 
 // ======================================
 // حفظ المنتج
@@ -231,18 +184,7 @@ productForm.addEventListener("submit", async function (e) {
 
     try {
 
-        let imageUrl = "";
-
-        if (imageInput.files.length > 0) {
-
-            imageUrl = await uploadImage(imageInput.files[0]);
-
-        } else if (editId) {
-
-            // لو بيعدّل ولم يرفع صورة جديدة، يحتفظ بالصورة القديمة
-            imageUrl = previewImage.src;
-
-        }
+        const imageUrl = resolveImagePath(imageInput.value);
 
         const product = buildProduct(imageUrl);
 
@@ -321,6 +263,8 @@ async function editProduct(id) {
     if (availableInput) availableInput.value = String(!!product.available);
 
     if (featuredInput) featuredInput.value = String(!!product.featured);
+
+    imageInput.value = toDisplayValue(product.image);
 
     previewImage.src = product.image || "images/no-image.png";
 
