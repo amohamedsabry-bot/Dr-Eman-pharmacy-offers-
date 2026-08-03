@@ -208,14 +208,12 @@ productForm.addEventListener("submit", async function (e) {
 
     } catch (error) {
 
-        console.error(error);
+        alert(
+        "Code: " + error.code +
+        "\n\nMessage: " + error.message
+    );
 
-        alert(error.message || "حدث خطأ أثناء الحفظ");
-
-    }
-
-});
-
+}
 
 // ======================================
 // حذف المنتج
