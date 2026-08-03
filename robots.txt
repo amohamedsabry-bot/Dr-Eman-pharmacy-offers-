@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://amohamedsabry-bot.github.io/Dr-Eman-pharmacy-offers-/sitemap.xml
