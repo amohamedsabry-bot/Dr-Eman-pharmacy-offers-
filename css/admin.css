@@ -135,6 +135,13 @@ section{
     box-shadow:0 0 0 4px var(--primary-tint);
 }
 
+.input-group input[readonly]{
+    background:var(--line);
+    color:var(--muted);
+    cursor:not-allowed;
+    font-weight:700;
+}
+
 .input-hint{
     display:block;
     margin-top:6px;
