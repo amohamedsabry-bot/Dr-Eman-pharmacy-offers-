@@ -128,6 +128,32 @@ previewImage.addEventListener("error", function () {
 
 
 // ======================================
+// حساب نسبة الخصم تلقائيًا من السعرين
+// ======================================
+
+function calculateDiscount() {
+
+    const oldPrice = Number(oldPriceInput.value);
+    const newPrice = Number(newPriceInput.value);
+
+    if (!oldPrice || !newPrice || oldPrice <= newPrice) {
+
+        discountInput.value = "";
+        return;
+
+    }
+
+    const percent = Math.round(((oldPrice - newPrice) / oldPrice) * 100);
+
+    discountInput.value = percent + "%";
+
+}
+
+oldPriceInput.addEventListener("input", calculateDiscount);
+newPriceInput.addEventListener("input", calculateDiscount);
+
+
+// ======================================
 // تنظيف النموذج
 // ======================================
 
@@ -259,6 +285,8 @@ async function editProduct(id) {
     newPriceInput.value = product.newPrice;
 
     discountInput.value = product.discount;
+
+    calculateDiscount();
 
     if (availableInput) availableInput.value = String(!!product.available);
 
