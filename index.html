@@ -168,6 +168,8 @@
 
         <button class="cat">أجهزة طبية</button>
 
+        <button class="cat">مستلزمات</button>
+
     </div>
 
 </section>
@@ -353,6 +355,58 @@
     </div>
 
 </footer>
+
+<!-- زر السلة العائم -->
+
+<button id="cartFab" class="cart-fab" aria-label="عرض السلة">
+
+    🛒
+
+    <span id="cartBadge" class="cart-badge hidden">0</span>
+
+</button>
+
+<!-- سلة الطلب -->
+
+<div id="cartOverlay" class="cart-overlay hidden"></div>
+
+<aside id="cartDrawer" class="cart-drawer" aria-hidden="true">
+
+    <div class="cart-drawer-header">
+
+        <h3>سلة الطلب</h3>
+
+        <button id="cartCloseBtn" class="cart-close" aria-label="إغلاق">✕</button>
+
+    </div>
+
+    <div id="cartItems" class="cart-items">
+
+        <div class="cart-empty">لم تختر أي منتجات بعد.</div>
+
+    </div>
+
+    <div class="cart-drawer-footer">
+
+        <div class="cart-total">
+
+            <span>الإجمالي</span>
+
+            <span id="cartTotal">0 ج.م</span>
+
+        </div>
+
+        <button id="cartClearBtn" class="cart-clear-btn">إفراغ السلة</button>
+
+        <a id="cartSendBtn" class="whatsapp-btn cart-send-btn" target="_blank">
+
+            إرسال الطلب عبر واتساب
+
+        </a>
+
+    </div>
+
+</aside>
 
 <!-- JavaScript -->
 
