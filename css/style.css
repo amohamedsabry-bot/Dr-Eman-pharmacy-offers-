@@ -407,6 +407,55 @@ nav ul li a.active{
     box-shadow:0 8px 18px rgba(217,72,58,.35);
 }
 
+.featured-badge{
+    position:absolute;
+    top:16px;
+    right:16px;
+    background:linear-gradient(135deg,#f5b942,#e08b1f);
+    color:#fff;
+    padding:8px 14px;
+    border-radius:25px;
+    font-size:12.5px;
+    font-weight:800;
+    box-shadow:0 8px 18px rgba(224,139,31,.4);
+    z-index:2;
+}
+
+/* ===========================
+   Featured Section
+=========================== */
+
+.featured-section{
+    padding:60px 20px 10px;
+}
+
+.featured-section.hidden{
+    display:none;
+}
+
+.featured-section h2{
+    text-align:center;
+    font-size:30px;
+    color:var(--primary-dark);
+    margin-bottom:10px;
+    font-weight:800;
+}
+
+.featured-section h2::after{
+    content:"";
+    display:block;
+    width:64px;
+    height:4px;
+    background:linear-gradient(135deg,#f5b942,#e08b1f);
+    border-radius:4px;
+    margin:16px auto 40px;
+}
+
+.featured-grid .product-card{
+    border-color:#f5cf8f;
+    box-shadow:0 10px 26px rgba(224,139,31,.15);
+}
+
 /* Content */
 
 .product-info{
