@@ -14,6 +14,8 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const productsContainer = document.getElementById("products");
+const featuredSection = document.getElementById("featuredSection");
+const featuredContainer = document.getElementById("featuredProducts");
 const searchInput = document.getElementById("search");
 const categoryButtons = document.querySelectorAll(".cat");
 const year = document.getElementById("year");
@@ -59,9 +61,14 @@ async function loadProducts() {
 
         snapshot.forEach((item) => {
 
+            const data = item.data();
+
+            // إخفاء المنتجات المحددة كـ "غير متوفر" من الموقع الأمامي
+            if (data.available === false) return;
+
             products.push({
                 id: item.id,
-                ...item.data()
+                ...data
             });
 
         });
@@ -69,6 +76,7 @@ async function loadProducts() {
         filteredProducts = [...products];
 
         displayProducts(filteredProducts);
+        renderFeatured(products);
 
     } catch (error) {
 
@@ -84,24 +92,11 @@ async function loadProducts() {
 // عرض المنتجات
 // ===============================
 
-function displayProducts(items) {
+function buildProductCard(product) {
 
-    if (!items.length) {
+    const inCart = cart.some(item => item.id === product.id);
 
-        productsContainer.innerHTML =
-            '<div class="no-products">لا توجد عروض حالياً.</div>';
-
-        return;
-
-    }
-
-    productsContainer.innerHTML = "";
-
-    items.forEach(product => {
-
-        const inCart = cart.some(item => item.id === product.id);
-
-        productsContainer.innerHTML += `
+    return `
 
 <div class="product-card${inCart ? " in-cart" : ""}" data-id="${product.id}">
 
@@ -110,6 +105,8 @@ function displayProducts(items) {
         ${product.discount || ""}
 
     </span>
+
+    ${product.featured ? '<span class="featured-badge">⭐ مميز</span>' : ""}
 
     <img
         src="${product.image || 'images/no-image.png'}"
@@ -165,7 +162,45 @@ function displayProducts(items) {
 
 `;
 
-    });
+}
+
+function displayProducts(items) {
+
+    if (!items.length) {
+
+        productsContainer.innerHTML =
+            '<div class="no-products">لا توجد عروض حالياً.</div>';
+
+        return;
+
+    }
+
+    productsContainer.innerHTML = items.map(buildProductCard).join("");
+
+    animateCards();
+
+}
+
+// ===============================
+// عرض المنتجات المميزة
+// ===============================
+
+function renderFeatured(items) {
+
+    const featured = items.filter(product => product.featured);
+
+    if (!featured.length) {
+
+        featuredSection.classList.add("hidden");
+        featuredContainer.innerHTML = "";
+
+        return;
+
+    }
+
+    featuredContainer.innerHTML = featured.map(buildProductCard).join("");
+
+    featuredSection.classList.remove("hidden");
 
     animateCards();
 
@@ -385,6 +420,18 @@ function closeCart() {
 }
 
 productsContainer.addEventListener("click", (e) => {
+
+    const btn = e.target.closest(".add-cart-btn");
+
+    if (btn) {
+
+        toggleCartItem(btn.dataset.id);
+
+    }
+
+});
+
+featuredContainer.addEventListener("click", (e) => {
 
     const btn = e.target.closest(".add-cart-btn");
 
