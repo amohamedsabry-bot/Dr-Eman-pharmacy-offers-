@@ -559,7 +559,11 @@ if (tipForm) {
         } catch (error) {
 
             console.error(error);
-            alert("تعذر إضافة النصيحة.");
+            alert(
+                "تعذر إضافة النصيحة.\n\n" +
+                "الكود: " + (error.code || "غير معروف") +
+                "\nالرسالة: " + error.message
+            );
 
         }
 

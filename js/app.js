@@ -76,6 +76,11 @@ async function loadTicker() {
 
         tickerTrack.innerHTML = spans + spans;
 
+        // سرعة الشريط بتتناسب مع عدد النصائح، عشان اللفة تفضل
+        // سلسة ومتوازنة بدل ما تحس إنها واقفة لو النصائح كتير
+        const duration = Math.max(20, tips.length * 6);
+        tickerTrack.style.animationDuration = duration + "s";
+
     } catch (error) {
 
         console.error(error);
@@ -615,10 +620,45 @@ if (navToggle && mainNav) {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    loadProducts();
-    loadTicker();
+    try {
+
+        loadProducts();
+        loadTicker();
+
+    } catch (error) {
+
+        console.error(error);
+        showDebugBanner(error.message);
+
+    }
 
 });
+
+// ===============================
+// عرض أي خطأ تقني في أعلى الصفحة
+// (عشان يسهل تصويره وإرساله للمطوّر بدل الدخول على Console)
+// ===============================
+
+function showDebugBanner(message) {
+
+    let banner = document.getElementById("debugBanner");
+
+    if (!banner) {
+
+        banner = document.createElement("div");
+        banner.id = "debugBanner";
+        banner.style.cssText =
+            "position:fixed;top:0;left:0;right:0;background:#c0392b;" +
+            "color:#fff;padding:10px 14px;font-size:13px;font-family:'Cairo',sans-serif;" +
+            "z-index:99999;text-align:center;direction:rtl;box-shadow:0 4px 12px rgba(0,0,0,.3);";
+
+        document.body.prepend(banner);
+
+    }
+
+    banner.textContent = "⚠️ خطأ تقني: " + message;
+
+}
 
 // ===============================
 // التقاط الأخطاء
@@ -627,5 +667,6 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("error", (e) => {
 
     console.error("Application Error:", e.message);
+    showDebugBanner(e.message);
 
 });
