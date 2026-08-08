@@ -50,6 +50,24 @@
 
 <body>
 
+<script>
+// حماية عاجلة: لو أي خطأ برمجي حصل في أي مكان بالصفحة، يظهر
+// شريط أحمر فوق الصفحة مباشرة عشان يسهل تصويره وإرساله للمطوّر
+window.addEventListener("error", function (e) {
+    var banner = document.getElementById("debugBanner");
+    if (!banner) {
+        banner = document.createElement("div");
+        banner.id = "debugBanner";
+        banner.style.cssText =
+            "position:fixed;top:0;left:0;right:0;background:#c0392b;" +
+            "color:#fff;padding:10px 14px;font-size:13px;font-family:'Cairo',sans-serif;" +
+            "z-index:99999;text-align:center;direction:rtl;box-shadow:0 4px 12px rgba(0,0,0,.3);";
+        document.body.prepend(banner);
+    }
+    banner.textContent = "⚠️ خطأ تقني: " + (e.message || "غير معروف");
+});
+</script>
+
 <header>
 
     <div class="container">
