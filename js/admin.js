@@ -39,7 +39,12 @@ const discountInput = document.getElementById("discount");
 const availableInput = document.getElementById("available");
 const featuredInput = document.getElementById("featured");
 
+const tipForm = document.getElementById("tipForm");
+const tipTextInput = document.getElementById("tipText");
+const tipsList = document.getElementById("tipsList");
+
 const productsRef = collection(db, "products");
+const tipsRef = collection(db, "tips");
 
 // متغير لحفظ المنتج الجاري تعديله
 let editId = null;
@@ -479,12 +484,127 @@ if (clearAllBtn) {
 
 
 // ======================================
+// إدارة نصائح شريط التوعية
+// ======================================
+
+async function loadTips() {
+
+    tipsList.innerHTML = '<li class="tips-empty">جارٍ التحميل...</li>';
+
+    try {
+
+        const q = query(tipsRef, orderBy("createdAt", "asc"));
+
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+
+            tipsList.innerHTML = '<li class="tips-empty">لا توجد نصائح مضافة بعد.</li>';
+
+            return;
+
+        }
+
+        tipsList.innerHTML = "";
+
+        snapshot.forEach((docSnap) => {
+
+            const tip = docSnap.data();
+
+            tipsList.innerHTML += `
+
+<li>
+
+<span>${tip.text}</span>
+
+<button class="tip-delete" data-id="${docSnap.id}">🗑 حذف</button>
+
+</li>
+
+`;
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        tipsList.innerHTML = '<li class="tips-empty">تعذر تحميل النصائح.</li>';
+
+    }
+
+}
+
+if (tipForm) {
+
+    tipForm.addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        const text = tipTextInput.value.trim();
+
+        if (!text) return;
+
+        try {
+
+            await addDoc(tipsRef, {
+                text,
+                createdAt: new Date()
+            });
+
+            tipTextInput.value = "";
+
+            loadTips();
+
+        } catch (error) {
+
+            console.error(error);
+            alert("تعذر إضافة النصيحة.");
+
+        }
+
+    });
+
+}
+
+if (tipsList) {
+
+    tipsList.addEventListener("click", async (e) => {
+
+        const btn = e.target.closest(".tip-delete");
+
+        if (!btn) return;
+
+        const ok = confirm("هل تريدين حذف هذه النصيحة؟");
+
+        if (!ok) return;
+
+        try {
+
+            await deleteDoc(doc(db, "tips", btn.dataset.id));
+
+            loadTips();
+
+        } catch (error) {
+
+            console.error(error);
+            alert("تعذر حذف النصيحة.");
+
+        }
+
+    });
+
+}
+
+
+// ======================================
 // تشغيل الصفحة
 // ======================================
 
 document.addEventListener("DOMContentLoaded", () => {
 
     loadProducts();
+    loadTips();
 
 });
 

@@ -1,6 +1,6 @@
 // ======================================
 // Dr Eman Pharmacy Offers
-// app.js
+// featured.js — صفحة المنتجات المميزة المستقلة
 // Firebase Modular v12
 // ======================================
 
@@ -13,12 +13,8 @@ import {
     orderBy
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-const productsContainer = document.getElementById("products");
-const featuredSection = document.getElementById("featuredSection");
 const featuredContainer = document.getElementById("featuredProducts");
 const tickerTrack = document.getElementById("tickerTrack");
-const searchInput = document.getElementById("search");
-const categoryButtons = document.querySelectorAll(".cat");
 const year = document.getElementById("year");
 
 const WHATSAPP_NUMBER = "201119437427";
@@ -35,7 +31,6 @@ const cartClearBtn = document.getElementById("cartClearBtn");
 const cartSendBtn = document.getElementById("cartSendBtn");
 
 let products = [];
-let filteredProducts = [];
 let cart = loadCart();
 
 const productsRef = collection(db, "products");
@@ -73,7 +68,6 @@ async function loadTicker() {
 
         }
 
-        // تكرار القائمة مرتين لضمان حركة متصلة بدون فجوة
         const spans = tips.map(text => `<span>${text}</span>`).join("");
 
         tickerTrack.innerHTML = spans + spans;
@@ -89,13 +83,13 @@ async function loadTicker() {
 }
 
 // ===============================
-// تحميل المنتجات من Firestore
+// تحميل المنتجات المميزة من Firestore
 // ===============================
 
-async function loadProducts() {
+async function loadFeatured() {
 
-    productsContainer.innerHTML =
-        '<div class="loading">جارٍ تحميل العروض...</div>';
+    featuredContainer.innerHTML =
+        '<div class="loading">جارٍ تحميل المنتجات المميزة...</div>';
 
     try {
 
@@ -112,8 +106,9 @@ async function loadProducts() {
 
             const data = item.data();
 
-            // إخفاء المنتجات المحددة كـ "غير متوفر" من الموقع الأمامي
+            // إخفاء المنتجات "غير متوفر" أو غير المميزة
             if (data.available === false) return;
+            if (!data.featured) return;
 
             products.push({
                 id: item.id,
@@ -122,21 +117,19 @@ async function loadProducts() {
 
         });
 
-        filteredProducts = [...products];
-
-        displayProducts(filteredProducts);
-        renderFeatured(products);
+        displayFeatured();
 
     } catch (error) {
 
         console.error(error);
 
-        productsContainer.innerHTML =
-            '<div class="no-products">تعذر تحميل العروض.</div>';
+        featuredContainer.innerHTML =
+            '<div class="no-products">تعذر تحميل المنتجات.</div>';
 
     }
 
 }
+
 // ===============================
 // عرض المنتجات
 // ===============================
@@ -155,7 +148,7 @@ function buildProductCard(product) {
 
     </span>
 
-    ${product.featured ? '<span class="featured-badge">⭐ مميز</span>' : ""}
+    <span class="featured-badge">⭐ مميز</span>
 
     <img
         src="${product.image || 'images/no-image.png'}"
@@ -213,50 +206,25 @@ function buildProductCard(product) {
 
 }
 
-function displayProducts(items) {
+function displayFeatured() {
 
-    if (!items.length) {
+    if (!products.length) {
 
-        productsContainer.innerHTML =
-            '<div class="no-products">لا توجد عروض حالياً.</div>';
+        featuredContainer.innerHTML =
+            '<div class="no-products">لا توجد منتجات مميزة حاليًا.</div>';
 
         return;
 
     }
 
-    productsContainer.innerHTML = items.map(buildProductCard).join("");
+    featuredContainer.innerHTML = products.map(buildProductCard).join("");
 
     animateCards();
 
 }
 
 // ===============================
-// عرض المنتجات المميزة
-// ===============================
-
-function renderFeatured(items) {
-
-    const featured = items.filter(product => product.featured);
-
-    if (!featured.length) {
-
-        featuredSection.classList.add("hidden");
-        featuredContainer.innerHTML = "";
-
-        return;
-
-    }
-
-    featuredContainer.innerHTML = featured.map(buildProductCard).join("");
-
-    featuredSection.classList.remove("hidden");
-
-    animateCards();
-
-}
-
-// ===============================
-// السلة (اختيار أكثر من منتج)
+// السلة (نفس منطق الموقع الرئيسي)
 // ===============================
 
 function loadCart() {
@@ -468,18 +436,6 @@ function closeCart() {
 
 }
 
-productsContainer.addEventListener("click", (e) => {
-
-    const btn = e.target.closest(".add-cart-btn");
-
-    if (btn) {
-
-        toggleCartItem(btn.dataset.id);
-
-    }
-
-});
-
 featuredContainer.addEventListener("click", (e) => {
 
     const btn = e.target.closest(".add-cart-btn");
@@ -511,63 +467,6 @@ cartClearBtn.addEventListener("click", clearCart);
 
 updateCartUI();
 
-// ===============================
-// البحث
-// ===============================
-
-searchInput.addEventListener("input", () => {
-
-    const keyword = searchInput.value
-        .trim()
-        .toLowerCase();
-
-    filteredProducts = products.filter(product =>
-
-        product.name.toLowerCase().includes(keyword) ||
-
-        product.description.toLowerCase().includes(keyword)
-
-    );
-
-    displayProducts(filteredProducts);
-
-});
-
-// ===============================
-// التصفية حسب التصنيف
-// ===============================
-
-categoryButtons.forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        categoryButtons.forEach(btn =>
-            btn.classList.remove("active")
-        );
-
-        button.classList.add("active");
-
-        const category = button.textContent.trim();
-
-        if (category === "الكل") {
-
-            filteredProducts = [...products];
-
-        } else {
-
-            filteredProducts = products.filter(product =>
-
-                product.category === category
-
-            );
-
-        }
-
-        displayProducts(filteredProducts);
-
-    });
-
-});
 // ===============================
 // تأثير ظهور البطاقات
 // ===============================
@@ -609,26 +508,6 @@ if (year) {
 }
 
 // ===============================
-// تغيير شكل الهيدر أثناء التمرير
-// ===============================
-
-window.addEventListener("scroll", () => {
-
-    const header = document.querySelector("header");
-
-    if (window.scrollY > 50) {
-
-        header.classList.add("scrolled");
-
-    } else {
-
-        header.classList.remove("scrolled");
-
-    }
-
-});
-
-// ===============================
 // قائمة الموبايل
 // ===============================
 
@@ -650,12 +529,32 @@ if (navToggle && mainNav) {
 }
 
 // ===============================
-// بدء تشغيل الموقع
+// تغيير شكل الهيدر أثناء التمرير
+// ===============================
+
+window.addEventListener("scroll", () => {
+
+    const header = document.querySelector("header");
+
+    if (window.scrollY > 50) {
+
+        header.classList.add("scrolled");
+
+    } else {
+
+        header.classList.remove("scrolled");
+
+    }
+
+});
+
+// ===============================
+// بدء تشغيل الصفحة
 // ===============================
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    loadProducts();
+    loadFeatured();
     loadTicker();
 
 });
