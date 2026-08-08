@@ -422,8 +422,72 @@ nav ul li a.active{
 }
 
 /* ===========================
-   Featured Section
+   Ticker Bar (نصائح توعية دوائية)
 =========================== */
+
+.ticker-bar{
+    background:linear-gradient(90deg, var(--primary-dark), var(--primary));
+    overflow:hidden;
+    white-space:nowrap;
+    padding:11px 0;
+    position:relative;
+}
+
+.ticker-track{
+    display:inline-flex;
+    gap:55px;
+    padding-inline-end:55px;
+    animation:ticker-scroll 45s linear infinite;
+    will-change:transform;
+}
+
+.ticker-bar:hover .ticker-track{
+    animation-play-state:paused;
+}
+
+.ticker-track span{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:#fff;
+    font-size:13.5px;
+    font-weight:700;
+    flex-shrink:0;
+}
+
+@keyframes ticker-scroll{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+}
+
+@media(max-width:600px){
+
+.ticker-track span{
+    font-size:12.5px;
+}
+
+}
+
+/* ===========================
+   Featured Page Banner
+=========================== */
+
+.featured-page-hero{
+    background:linear-gradient(135deg,#f5b942,#e08b1f);
+    padding:50px 20px;
+    text-align:center;
+    color:#fff;
+}
+
+.featured-page-hero h1{
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+.featured-page-hero p{
+    font-size:15px;
+    opacity:.9;
+}
 
 .featured-section{
     padding:60px 20px 10px;
