@@ -125,7 +125,6 @@ async function loadProducts() {
         filteredProducts = [...products];
 
         displayProducts(filteredProducts);
-        renderFeatured(products);
 
     } catch (error) {
 
