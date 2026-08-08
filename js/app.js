@@ -14,8 +14,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const productsContainer = document.getElementById("products");
-const featuredSection = document.getElementById("featuredSection");
-const featuredContainer = document.getElementById("featuredProducts");
 const tickerTrack = document.getElementById("tickerTrack");
 const searchInput = document.getElementById("search");
 const categoryButtons = document.querySelectorAll(".cat");
@@ -224,31 +222,6 @@ function displayProducts(items) {
     }
 
     productsContainer.innerHTML = items.map(buildProductCard).join("");
-
-    animateCards();
-
-}
-
-// ===============================
-// عرض المنتجات المميزة
-// ===============================
-
-function renderFeatured(items) {
-
-    const featured = items.filter(product => product.featured);
-
-    if (!featured.length) {
-
-        featuredSection.classList.add("hidden");
-        featuredContainer.innerHTML = "";
-
-        return;
-
-    }
-
-    featuredContainer.innerHTML = featured.map(buildProductCard).join("");
-
-    featuredSection.classList.remove("hidden");
 
     animateCards();
 
@@ -468,18 +441,6 @@ function closeCart() {
 }
 
 productsContainer.addEventListener("click", (e) => {
-
-    const btn = e.target.closest(".add-cart-btn");
-
-    if (btn) {
-
-        toggleCartItem(btn.dataset.id);
-
-    }
-
-});
-
-featuredContainer.addEventListener("click", (e) => {
 
     const btn = e.target.closest(".add-cart-btn");
 
