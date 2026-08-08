@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>المنتجات المميزة | صيدلية د/ إيمان الشبراوي</title>
+
+    <meta name="description"
+        content="أفضل العروض والمنتجات المميزة في صيدلية د/ إيمان الشبراوي.">
+
+    <meta name="robots" content="index, follow">
+
+    <meta name="theme-color" content="#0f8b5f">
+
+    <link rel="icon" href="images/logo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="container">
+
+        <div class="logo">
+
+            <img
+                src="images/logo.png"
+                alt="صيدلية د/ إيمان الشبراوي">
+
+            <div>
+
+                <h2>
+                    صيدلية د/ إيمان الشبراوي
+                </h2>
+
+                <p>
+                    Dr Eman Pharmacy Offers
+                </p>
+
+            </div>
+
+        </div>
+
+        <nav id="mainNav">
+
+            <ul>
+
+                <li><a href="index.html">الرئيسية</a></li>
+
+                <li><a href="index.html#offers">العروض</a></li>
+
+                <li><a class="active" href="featured.html">⭐ المميز</a></li>
+
+                <li><a href="index.html#contact">اتصل بنا</a></li>
+
+            </ul>
+
+        </nav>
+
+        <button id="navToggle" class="nav-toggle" aria-label="فتح القائمة">
+            <span></span><span></span><span></span>
+        </button>
+
+    </div>
+
+</header>
+
+<div class="ticker-bar" aria-label="نصائح توعية دوائية">
+
+    <div class="ticker-track" id="tickerTrack">
+
+        <span>جارٍ تحميل النصائح...</span>
+
+    </div>
+
+</div>
+
+<section class="featured-page-hero">
+
+    <h1>⭐ المنتجات المميزة</h1>
+
+    <p>أفضل العروض والمنتجات المختارة خصيصًا لك</p>
+
+</section>
+
+<section id="offers" class="offers">
+
+    <div class="container">
+
+        <div id="featuredProducts" class="products-grid">
+
+            <!-- يتم إنشاء المنتجات المميزة تلقائياً بواسطة JavaScript -->
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+
+    <div class="container">
+
+        <div class="footer-logo">
+
+            <img
+                src="images/logo.png"
+                alt="صيدلية د/ إيمان الشبراوي">
+
+            <h3>
+
+                صيدلية د/ إيمان الشبراوي
+
+            </h3>
+
+        </div>
+
+        <div class="footer-links">
+
+            <a href="index.html">الرئيسية</a>
+
+            <a href="index.html#offers">العروض</a>
+
+            <a href="featured.html">المميز</a>
+
+            <a href="index.html#contact">اتصل بنا</a>
+
+        </div>
+
+        <div class="footer-contact">
+
+            <p>📞 01098872599</p>
+
+            <p>📱 01119437427</p>
+
+        </div>
+
+        <p class="copyright">
+
+            © <span id="year"></span>
+
+            جميع الحقوق محفوظة لصيدلية د/ إيمان الشبراوي
+
+        </p>
+
+    </div>
+
+</footer>
+
+<!-- زر السلة العائم -->
+
+<button id="cartFab" class="cart-fab" aria-label="عرض السلة">
+
+    🛒
+
+    <span id="cartBadge" class="cart-badge hidden">0</span>
+
+</button>
+
+<!-- سلة الطلب -->
+
+<div id="cartOverlay" class="cart-overlay hidden"></div>
+
+<aside id="cartDrawer" class="cart-drawer" aria-hidden="true">
+
+    <div class="cart-drawer-header">
+
+        <h3>سلة الطلب</h3>
+
+        <button id="cartCloseBtn" class="cart-close" aria-label="إغلاق">✕</button>
+
+    </div>
+
+    <div id="cartItems" class="cart-items">
+
+        <div class="cart-empty">لم تختر أي منتجات بعد.</div>
+
+    </div>
+
+    <div class="cart-drawer-footer">
+
+        <div class="cart-total">
+
+            <span>الإجمالي</span>
+
+            <span id="cartTotal">0 ج.م</span>
+
+        </div>
+
+        <button id="cartClearBtn" class="cart-clear-btn">إفراغ السلة</button>
+
+        <a id="cartSendBtn" class="whatsapp-btn cart-send-btn" target="_blank">
+
+            إرسال الطلب عبر واتساب
+
+        </a>
+
+    </div>
+
+</aside>
+
+<!-- JavaScript -->
+
+<script type="module" src="js/featured.js"></script>
+
+</body>
+
+</html>
