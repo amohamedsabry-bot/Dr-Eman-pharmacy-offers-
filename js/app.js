@@ -162,6 +162,7 @@ function buildProductCard(product) {
     <img
         src="${product.image || 'images/no-image.png'}"
         alt="${product.name}"
+        class="zoomable-img"
         loading="lazy">
 
     <div class="product-info">
@@ -455,7 +456,84 @@ productsContainer.addEventListener("click", (e) => {
 
     }
 
+    const img = e.target.closest(".zoomable-img");
+
+    if (img) {
+
+        openLightbox(img.src, img.alt);
+
+    }
+
 });
+
+// ===============================
+// تكبير صورة المنتج (Lightbox)
+// ===============================
+
+function openLightbox(src, alt) {
+
+    let lightbox = document.getElementById("imageLightbox");
+
+    if (!lightbox) {
+
+        lightbox = document.createElement("div");
+        lightbox.id = "imageLightbox";
+        lightbox.className = "image-lightbox";
+
+        lightbox.innerHTML = `
+            <div class="lightbox-card">
+                <button class="lightbox-close" aria-label="إغلاق">✕</button>
+                <div class="lightbox-img-wrap">
+                    <div class="lightbox-spinner"></div>
+                    <img id="lightboxImg" src="" alt="">
+                </div>
+                <p id="lightboxCaption" class="lightbox-caption"></p>
+            </div>
+        `;
+
+        document.body.appendChild(lightbox);
+
+        const imgEl = document.getElementById("lightboxImg");
+
+        imgEl.addEventListener("load", () => {
+            lightbox.classList.add("loaded");
+        });
+
+        lightbox.addEventListener("click", (e) => {
+
+            if (e.target === lightbox || e.target.classList.contains("lightbox-close")) {
+
+                closeLightbox();
+
+            }
+
+        });
+
+        document.addEventListener("keydown", (e) => {
+
+            if (e.key === "Escape") closeLightbox();
+
+        });
+
+    }
+
+    lightbox.classList.remove("loaded");
+
+    document.getElementById("lightboxImg").src = src;
+    document.getElementById("lightboxImg").alt = alt || "";
+    document.getElementById("lightboxCaption").textContent = alt || "";
+
+    lightbox.classList.add("open");
+
+}
+
+function closeLightbox() {
+
+    const lightbox = document.getElementById("imageLightbox");
+
+    if (lightbox) lightbox.classList.remove("open");
+
+}
 
 cartItemsEl.addEventListener("click", (e) => {
 
